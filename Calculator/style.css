@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #c2c2d6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.calculator {
+    background-color: black;
+    padding: 0.2em;
+    border: 1px solid gray;
+}
+
+#formula {
+    font-family: 'Orbitron', monospace;
+    color: orange;
+    text-align: right;
+    font-size: 0.75em;
+    height: 1.3em;
+}
+
+#display {
+    font-family: 'Orbitron', monospace;
+    color: white;
+    text-align: right;
+    font-size: 1.2em;
+    padding: 0.15em 0;
+    user-select: none;
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(5, 70px);
+}
+
+.calculator-button {
+    display: block;
+    border: none;
+    font-family: "Share Tech Mono", monospace;
+    color: white;
+    font-size: 1.25em;
+    border: 0.05em solid black;
+    background-color: #4d4d4d;
+}
+.calculator-button:focus {
+    outline: none;
+}
+.calculator-button:hover {
+    color: black;
+    border: 1px solid #dbd8d8;
+}
+#clear {
+    grid-column: 1 / 3;
+    background-color: #DC143C;
+}
+#zero {
+    grid-column: 1 / 3;
+}
+#equals {
+    grid-area: 4 / 4 / 6 / 5;
+    background-color: #2B547E;
+}
+
+.operator {
+    background-color: rgba(153, 147, 153, 0.651);
+}

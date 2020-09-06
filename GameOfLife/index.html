@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life</title>
+    <link rel="stylesheet" href="styles.css">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function getBoardState(width, height, randomize) {
+            function getFiller(random) {
+                if (!random) return false;
+                return Math.random() > 0.5;
+            }
+            function randomRow() {
+                const row = new Array(width).fill();
+                return row.map(() => getFiller(randomize));
+            }
+            return new Array(height).fill().map(() => randomRow(randomize));
+        }
+
+        function nextGeneration(grid) {
+            const nextGen = [];
+            for (let i = 0; i < grid.length; i++) {
+                let row = [];
+                for (let j = 0; j < grid[i].length; j++) {
+                    let neighbours = countNeighbours(grid, i, j);
+                    let status = false;
+                    if (neighbours < 2 || neighbours > 3) {
+                        status = false;
+                    } else if (neighbours == 3) {
+                        status = true;
+                    } else if (neighbours == 2 && grid[i][j]) {
+                        status = true;
+                    }
+                    row.push(status);
+                }
+                nextGen.push(row);
+            }
+            return nextGen;
+        }
+
+        function countNeighbours(myArray, i, j) {
+            let rowLimit = myArray.length - 1;
+            let columnLimit = myArray[0].length - 1;
+            let count = 0;
+            for (let x = Math.max(0, i - 1); x <= Math.min(i + 1, rowLimit); x++) {
+                for (let y = Math.max(0, j - 1); y <= Math.min(j + 1, columnLimit); y++) {
+                    if (x !== i || y !== j) {
+                        if (myArray[x][y]) count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        function Display({ boardState, onCellClicked, onCellClick }) {
+            function dispatchClick(event) {
+                const coords = event.target.dataset.coords;
+                if(!coords) return;
+                const [x, y] = coords.split(':').map(parseFloat);
+                onCellClick(x, y);
+            }           
+
+            return (
+                <div className="display" onClick={dispatchClick}>
+                    {boardState.map((r, i) =>
+                        <div className="row" key={i}>
+                            {r.map((c, j) =>
+                                <div key={j}
+                                    data-coords={`${i}:${j}`}
+                                    className={`cell ${boardState[i][j] ? 'living' : ''}`}
+                                />
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function Controls({ generation, onClearBoard, onRandomize, onStartPause }) {
+            return (
+                <div className="controls">
+                    <div className="Generation">Generation <br /> {generation}</div>
+                    <div className="start-pause" onClick={onStartPause}>Start/Pause/Resume</div>
+                    <div className="randomize" onClick={onRandomize}>Randomize</div>
+                    <div className="clearboard" onClick={onClearBoard}>Clear Board</div>
+                </div>
+            );
+        }
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    grid: getBoardState(50, 30, true),
+                    generation: 1,
+                    running: true
+                }
+                this.interval = setInterval(() => {
+                    this.setState({
+                        running: true,
+                        grid: nextGeneration(this.state.grid),
+                        generation: this.state.generation + 1
+                    });
+                }, 120);
+            }
+
+            toggleRunning = () => {
+                if (this.state.running) {
+                    clearInterval(this.interval);
+                    this.setState({
+                        running: false
+                    });
+                } else {
+                    this.interval = setInterval(() => {
+                        this.setState({
+                            running: true,
+                            grid: nextGeneration(this.state.grid),
+                            generation: this.state.generation + 1
+                        });
+                    }, 120);
+                }
+            }
+
+            setCoord = (x , y) => {
+               const oldGrid = this.state.grid;
+               oldGrid[x][y] = !oldGrid[x][y];
+               this.setState({
+                   grid: oldGrid
+               })
+            }
+
+            clearBoard = () => {
+                clearInterval(this.interval);
+
+                this.setState({
+                    grid: getBoardState(50, 30, false),
+                    generation: 1,
+                    running: false
+                });
+            }
+            randomize = () => {
+                clearInterval(this.interval);
+
+                this.setState({
+                    grid: getBoardState(50, 30, true),
+                    generation: 1,
+                    running: false
+                });
+
+                setTimeout(() => this.toggleRunning(), 300);
+            }
+
+
+            render() {
+                return (
+                    <div className="app">
+                        <h1>Conway's Game of Life</h1>
+                        <Display 
+                            boardState={this.state.grid}
+                            onCellClick={this.setCoord}
+                        />
+                        <Controls
+                            onStartPause={this.toggleRunning}
+                            generation={this.state.generation}
+                            onClearBoard={this.clearBoard}
+                            onRandomize={this.randomize}
+                        />
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, document.querySelector('#root'));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">    
+    <title>Random Quote Machine</title>
+</head>
+
+<body>
+    <div id="app-root"></div>
+
+    <script src='https://unpkg.com/react@15.4.2/dist/react.js'></script>
+    <script src='https://unpkg.com/react-dom@15.4.2/dist/react-dom.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js'></script>
+    <script type="text/babel">
+        const quotes = [
+            {
+                text: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+                author: "Nelson Mandela"
+            },
+            {
+                text: "The way to get started is to quit talking and begin doing.",
+                author: "Walt Disney"
+            },
+            {
+                text: "Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma – which is living with the results of other people's thinking.",
+                author: "Steve Jobs"
+            },
+            {
+                text: "If life were predictable it would cease to be life, and be without flavor.",
+                author: "Eleanor Roosevelt"
+            },
+            {
+                text: "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success.",
+                author: "James Cameron"
+            },
+            {
+                text: "Life is what happens when you're busy making other plans.",
+                author: "John Lennon"
+            }
+            , {
+                text: "He was going to live forever, or die in the attempt.",
+                author: "Joseph Heller"
+            }
+        ];
+
+        const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+            '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+            '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+            '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+            '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
+            '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+            '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
+            '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+            '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+            '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+
+        const getRandomItem = myArray => myArray[Math.floor(Math.random() * myArray.length)];
+
+        class QuoteMachine extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    quote: getRandomItem(quotes),
+                    color: getRandomItem(colorArray)
+                }
+                this.updateQuote = this.updateQuote.bind(this);
+            }
+
+            updateQuote() {
+                setTimeout(() =>
+                    this.setState({
+                        quote: getRandomItem(quotes),
+                        color: getRandomItem(colorArray)
+                    }), 500);
+            }
+
+            render() {
+                const { quote, color } = this.state;
+
+                return (
+                    <div className="bckgrnd" style={{ backgroundColor: color }}>
+                        <div id="quote-box">
+                            <p id="text" style={{ color: color }}>
+                                <i className="fa fa-quote-left"></i> {quote.text}
+                            </p>
+                            <p id="author" style={{ color: color }}>{quote.author}</p>
+                            <div id="buttons">
+                                <div id="socials">
+                                    <a id="tweet-quote" style={{ backgroundColor: color }} href="https://twitter.com/intent/tweet"><i className="fa fa-twitter"></i></a>
+                                    <a href="#" style={{ backgroundColor: color }}><i className="fa fa-tumblr"></i></a>
+                                </div>
+                                <button style={{ backgroundColor: color }} id="new-quote" onClick={this.updateQuote}>New Quote</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<QuoteMachine />, document.getElementById('app-root'));
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+
+</html>

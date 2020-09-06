@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root">
+    </div>
+    <script type="text/babel">
+        function isOperator(val) {
+            return ['-', '+', '*', '/'].includes(val);
+        }
+
+        function findLastOperatorSubstring(str) {
+            let found = false;
+            let index = -1;
+            for(let i = 0; i < str.length; i++) {
+                if(!isOperator(str[i])) {
+                    found = false;
+                } else {
+                    if(!found) {
+                        found = true;
+                        index = i;
+                    }
+                }
+            }
+            return index;
+        }
+
+        function App() {
+            const [hasBeenEvaled, setHasBeenEvaled] = React.useState(false);
+            const [currentExpr, setCurrentExpr] = React.useState({
+                value: '0',
+                decimal: false,
+                operator: true
+            });
+            const [cachedExpr, setcachedExpr] = React.useState({
+                value: '',
+                lastIsOperator: false,
+                hasOperator: false
+            });
+
+            function removeTrail(str) {
+                const index = findLastOperatorSubstring(str);
+                return str.slice(0, index);
+            }
+
+
+            function handleOperator(op) {
+                if(cachedExpr.lastIsOperator) {
+                    if(op === '-') {
+                        setCurrentExpr({
+                            ...currentExpr,
+                            value: currentExpr.value + op                            
+                        });
+                        setcachedExpr({
+                            ...cachedExpr,
+                            lastIsOperator: true,
+                            value: cachedExpr.value + op
+                        });
+                    } else {
+                        setCurrentExpr({
+                            ...currentExpr,
+                            lastIsOperator: true,
+                            value: removeTrail(currentExpr.value) + op                            
+                        });
+                        setcachedExpr({
+                            ...cachedExpr,
+                            lastIsOperator: true,
+                            value: removeTrail(cachedExpr.value) + op
+                        });
+                    }
+                } else if (hasBeenEvaled) {
+                    setcachedExpr({
+                        value: currentExpr.value + op,
+                        hasOperator: false,
+                        lastIsOperator: false
+                    });
+                    setCurrentExpr({
+                        operator: false,
+                        decimal: false,
+                        value: currentExpr.value + op,
+                    });
+                    setHasBeenEvaled(false);
+                } else {
+                    setcachedExpr({
+                        value: cachedExpr.value + op,
+                        hasOperator: true,
+                        lastIsOperator: true
+                    });
+                    setCurrentExpr({
+                        ...currentExpr,
+                        decimal: false,
+                        value: currentExpr.value + op,
+                    })
+                }
+            }
+
+            function handleButtonPress(val) {
+                if(hasBeenEvaled) {
+                    clearAll();
+                    setCurrentExpr({
+                        ...currentExpr,
+                        value: val,
+                    });
+                    setcachedExpr({
+                        ...cachedExpr,
+                        lastIsOperator: false,
+                        value: val
+                    })
+                } else if (currentExpr.value === '0' && val === '0') {
+                    return;
+                } else {
+                    if (currentExpr.operator) {
+                        setcachedExpr({
+                            value: cachedExpr.value + val,
+                            lastIsOperator: false,
+                            hasOperator: true
+                        });
+                        setCurrentExpr({
+                            value: val,
+                            decimal: false,
+                            operator: false
+                        });
+                    } else {
+                        const nextVal = (currentExpr.value === '0' ? '' : currentExpr.value) + val;
+                        setCurrentExpr({
+                            value: nextVal,
+                            decimal: currentExpr.decimal,
+                            operator: false
+                        });
+                        if(hasBeenEvaled) {
+                            setcachedExpr({
+                                value: currentExpr.val + val,
+                                hasOperator: cachedExpr.hasOperator,
+                                lastIsOperator: cachedExpr.lastIsOperator
+                            });
+                        } else {
+                            setcachedExpr({
+                                value: cachedExpr.value + val,
+                                hasOperator: cachedExpr.hasOperator,
+                                lastIsOperator: false
+                            })
+                        }
+
+                    }
+
+                }
+            }
+
+            function evaluate() {
+                const evald = eval(cachedExpr.value);
+                setCurrentExpr({
+                    value: evald,
+                    decimal: false,
+                    operator: false
+                });
+                setcachedExpr({
+                    value: cachedExpr.value + '=' + evald,
+                    hasOperator: false,
+                    isOperator: false
+                });
+                setHasBeenEvaled(true);
+            }
+
+            function setDecimal() {
+                if (!currentExpr.decimal) {
+                    setCurrentExpr({
+                        value: currentExpr.value + '.',
+                        decimal: true,
+                        operator: false
+                    });
+                    setcachedExpr({
+                        ...cachedExpr,
+                        value: cachedExpr.value + '.'
+                    });
+                }
+            }
+
+            function clearAll() {
+                setCurrentExpr({
+                    value: '0',
+                    decimal: false,
+                    operator: false
+                });
+                setcachedExpr({
+                    value: '',
+                    lastIsOperator: false,
+                    hasOperator: false
+                });
+                setHasBeenEvaled(false);
+            }
+
+            return (
+                <div className="calculator">
+                    <div id="formula">
+                        {cachedExpr.value}
+                    </div>
+                    <div id="display">
+                        {currentExpr.value}
+                    </div>
+                    <div className="button-grid">
+                        <button className="calculator-button" value="AC" onClick={clearAll} id="clear">AC</button>
+                        <button className="calculator-button operator" onClick={() => handleOperator("/")} id="divide" value="/">/</button>
+                        <button className="calculator-button operator" onClick={() => handleOperator("*")} id="multiply" value="x">x</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("7")} id="seven" value="7">7</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("8")} id="eight" value="8">8</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("9")} id="nine" value="9">9</button>
+                        <button className="calculator-button operator" onClick={() => handleOperator("-")} id="subtract" value="-">-</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("4")} id="four" value="4">4</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("5")} id="five" value="5">5</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("6")} id="six" value="6">6</button>
+                        <button className="calculator-button operator" onClick={() => handleOperator("+")} id="add" value="+">+</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("1")} id="one" value="1">1</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("2")} id="two" value="2">2</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("3")} id="three" value="3">3</button>
+                        <button className="calculator-button" value="=" onClick={evaluate} id="equals">=</button>
+                        <button className="calculator-button" onClick={() => handleButtonPress("0")} id="zero" value="0" id="zero">0</button>
+                        <button className="calculator-button" id="decimal" onClick={setDecimal} value=".">.</button>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+
+</html>

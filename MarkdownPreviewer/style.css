@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css");
+
+:root {
+    --primary-bg: #87b5b5;
+    --secondary-bg: #c0d8d8;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--primary-bg);
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    width: 100%;
+    height: 100vh;
+    padding: 0.5em 1.5em;
+}
+
+.window {
+    margin: 1em auto;
+    box-shadow: 6px 9px 15px -2px rgba(0,0,0,0.75);
+}
+
+.window header span, .window button {
+    font-size: 1.1em;
+    font-family: "Russo One", sans-serif;
+}
+
+.window span {
+    display: block;
+}
+.window header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3em 0.3em;
+    background-color: teal;
+    border: 1px solid black;
+    margin: 0;
+    box-shadow: 2px 15px 15px -6px rgba(0,0,0,0.75);
+}
+
+.window button {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    display: block;
+}
+.window button:focus {
+    outline: none;
+}
+
+.window button:hover {
+    color: cyan;
+}
+
+.maximized {
+    width: 95%;
+    height: 95%;
+}
+
+.editor {
+    min-width: 400px;
+    width: 30%;
+}
+.preview {
+    width: 50%;
+    min-width: 400px;
+}
+
+#editor {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 200px;
+    background-color: var(--secondary-bg);
+    border: 1px solid black;
+    padding: 0.3em;
+    display: block;
+}
+
+.window.maximized #editor {
+    min-height: 97%;
+    resize: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+.window.max-prev {
+    min-height: 97% !important;
+}
+
+#preview {
+    min-height: 200px;
+    min-height: 97%;
+    background-color: var(--secondary-bg);
+    border: 1px solid black;
+}
+
+code {
+    background-color: #fff;
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 460px) {
+    #root  {
+        padding: 0.5em 0;
+    }
+    #editor, #preview {
+        min-width: 100%;
+    }
+    .maximized {
+        width: 100%;
+    }
+    img {
+        width: 100%;
+    }
+}
+

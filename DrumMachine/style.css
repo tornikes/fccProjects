@@ -1,0 +1,174 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    background-color: gray;
+    justify-content: center;
+    align-items: center;
+    font-family: "Russo One", sans-serif;
+}
+
+#drum-machine {
+    position: relative;
+    border: 4px solid orange;
+    padding: 2em;    
+    display: flex;
+    background-color: #c3c3c3;
+}
+
+.fcc-logo {
+    position: absolute;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 1.3em;
+    font-weight: 600;
+    padding-right: 0.3em;
+    top: 0;
+    right: 0;
+}
+
+.pads {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat((3, 1fr));
+    gap: 1em;
+}
+
+.drum-pad {
+    width: 100px;
+    height: 80px;
+    font-size: 1.5em;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 3px 3px 4px 4px black;
+    background-color: orangered;
+}
+/* .drum-pad:active {
+    box-shadow: none;    
+    transform: translate(0, 1px);
+}
+.turned-on .drum-pad:active {
+    background-color: yellow;
+} */
+.drum-pad.active {
+    box-shadow: none;    
+    transform: translate(0, 1px);
+}
+.turned-on .drum-pad.active {
+    background-color: yellow;
+}
+.controls {
+    padding: 2em 0 2em 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3em;
+    width: 80%;
+    text-align: center;
+    background-color: gray;
+}
+
+.switch {
+    height: 1.5em;
+    width: 3em;
+    padding: 0.2em;
+    margin: 0.3em 0;
+    background-color: black;
+    display: flex;
+}
+
+.switch-cont {
+    text-align: center;
+}
+
+.switch-cont.active .switch {
+    flex-direction: row-reverse;
+}
+.knob {
+    height: 100%;
+    width: 50%;
+    background-color: blue;
+}
+
+#volume input {
+    display: block;
+    width: 200px;
+    background: rgb(48, 45, 45);
+    height: 5px;
+    border: 1px solid black;
+    outline: none;
+}
+
+input, .switch-cont {
+    cursor: pointer;
+}
+
+input[type=range] {
+    -webkit-appearance: none; 
+    width: 100%; 
+    background: transparent;
+}
+  
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 20px;
+    width: 8px;
+    border-radius: 1px;
+    background: blue;
+    cursor: pointer;
+    margin-top: 0px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type=range]:focus {
+    outline: none; 
+}
+  
+  input[type=range]::-ms-track {
+    width: 100%;
+    cursor: pointer;
+  
+    background: transparent; 
+    border-color: transparent;
+    color: transparent;
+}
+
+
+@media (max-width: 650px) {
+    #drum-machine {
+        flex-direction: column;
+    }
+    .pads {
+        gap: 0.2em;
+    }
+    .drum-pad {
+        height: 70px;
+        width: 70px;
+        font-size: 0.9em;
+    }
+    .controls * + * {
+        margin-top: 1em;
+    }
+    .controls {
+        padding: 2em 0 0 0;
+    }
+}

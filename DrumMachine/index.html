@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drum Machine</title>
+    <link rel="stylesheet" href="style.css">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root">        
+    </div>
+    <script type="text/babel">
+        const sounds = {
+            heater: [
+                { letter: 'Q', name: 'Heater-1', source: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3' },
+                { letter: 'W', name: 'Heater-2', source: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3' },
+                { letter: 'E', name: 'Heater-3', source: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3' },
+                { letter: 'A', name: 'Heater-4', source: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3' },
+                { letter: 'S', name: 'Clap', source: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3' },
+                { letter: 'D', name: 'Open-HH', source: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3' },
+                { letter: 'Z', name: "Kick-n'-Hat", source: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3' },
+                { letter: 'X', name: 'Kick', source: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3' },
+                { letter: 'C', name: 'Closed-HH', source: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3' }
+            ],
+            smooth: [
+                { letter: 'Q', name: 'Chord-1', source: 'https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3'},
+                { letter: 'W', name: 'Chord-2', source: 'https://s3.amazonaws.com/freecodecamp/drums/Chord_2.mp3'},
+                { letter: 'E', name: 'Chord-3', source: 'https://s3.amazonaws.com/freecodecamp/drums/Chord_3.mp3'},
+                { letter: 'A', name: 'Shaker',  source:  'https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3'},
+                { letter: 'S', name: 'Open-HH', source: 'https://s3.amazonaws.com/freecodecamp/drums/Dry_Ohh.mp3'},
+                { letter: 'D', name: 'Closed-HH', source: 'https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3'},
+                { letter: 'Z', name: 'Punchy-Kick', source: 'https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3'},
+                { letter: 'X', name: 'Side-Kick', source: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3'},
+                { letter: 'C', name: 'Snare', source: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3'},
+            ]
+        };
+
+        function ToggleSwitch(props) {
+            return (
+                <div className={`switch-cont ${props.active ? 'active' : ''}`} onClick={() => props.clickCallback(!props.active)}>
+                    {props.text}
+                    <div className="switch">
+                        <div className="knob" />
+                    </div>
+                </div>
+            );
+        }
+
+
+        function App() {
+            const [power, setPower] = React.useState(true);
+            const [bank, setBank] = React.useState(false);
+            const [chosen, setChosen] = React.useState('heater');
+            const [volume, setVolume] = React.useState(0.4);
+
+            const refsObject = Object.fromEntries(sounds[chosen].map(entry => [entry.letter, { current: React.createRef(), name: entry.name }]));
+            const padRefs = Object.fromEntries(sounds[chosen].map(entry => [entry.letter, React.createRef()]));
+            const displayRef = React.createRef();
+
+            function playPad(lett) {
+                const pad = padRefs[lett].current;
+                pad.classList.add('active');
+                if (power) {
+                    const aud = refsObject[lett].current;                    
+                    aud.volume = volume;
+                    aud.currentTime = 0;
+                    aud.play();
+
+                    displayRef.current.innerText = refsObject[lett].name.replace('-', ' ');
+                }
+                setTimeout(() => pad.classList.remove('active'), 100);
+            }
+
+            function togglePower(val) {
+                setPower(val);
+                displayRef.current.innerText = '';
+            }
+            
+            function updateVolume(e) {
+                const nextVal = e.target.value;
+                const curr = displayRef.current;
+                if(power) {
+                    curr.innerText = `Volume: ${nextVal}`;
+                    setTimeout(() => curr.innerText = '', 500);
+                }
+                setVolume(nextVal);                
+            }
+
+            function changeBank() {
+                setBank(!bank);
+                const nextChosen = chosen === 'heater' ? 'smooth' : 'heater';
+                setChosen(nextChosen);
+                if(power) displayRef.current.innerText = nextChosen === 'heater' ? 'Heater Kit' : 'Smooth Piano Kit';
+            }
+
+            React.useEffect(() => {
+                const handler = e => {
+                    const key = e.key.toUpperCase();
+                    if(key in padRefs) playPad(key);
+                };
+
+                document.addEventListener('keydown', handler);
+                return () => document.removeEventListener('keydown', handler);
+            });
+
+
+            return (
+                <div id="drum-machine" class={`${power ? 'turned-on' : ''}`}>
+                    <div className="fcc-logo">
+                        FCC{' '}
+                        <i className="fa fa-free-code-camp"></i>
+                    </div>
+                    <div className="pads">
+                        {sounds[chosen].map(item => {
+                            return (
+                                <div ref={padRefs[item.letter]} id={item.name} className="drum-pad" onClick={() => playPad(item.letter)}>
+                                    {item.letter}
+                                    <audio id={`${item.letter}`} className="clip" ref={refsObject[item.letter]} src={item.source}>
+                                    </audio>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="controls">
+                        <ToggleSwitch text={"Power"} active={power} clickCallback={togglePower} />
+                        <div id="display" ref={displayRef}>
+                        </div>
+                        <div id="volume">
+                            <input type="range" step="0.01" min="0" max="1" value={volume} onChange={updateVolume} />
+                        </div>                        
+                        <ToggleSwitch text={"Bank"} active={bank} clickCallback={changeBank} />
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+
+</html>

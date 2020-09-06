@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Shrikhand&display=swap');
+
+:root {
+    --primary-green: rgb(86, 255, 35);
+    --primary-gray: rgb(92, 85, 85);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(27, 27, 27);
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.app > * {
+    margin-top: 1.2rem;
+}
+
+h1 {
+    font-family: 'Shrikhand', cursive;
+    color: var(--primary-green);
+}
+
+.display {
+    box-sizing: content-box;
+    width: 750px;
+    height: 450px;
+    border: 5px solid var(--primary-gray);
+    border-radius: 5px;
+}
+
+.controls {
+    background-color: var(--primary-gray);
+    font-family: 'Orbitron', monospace;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.controls > div {
+    background-color: var(--primary-green);
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.controls > div + div {
+    margin-top: 0.15rem;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--primary-gray);
+}
+
+.living {
+    background-color: var(--primary-green);
+}
+
+@media (max-width: 700px) {
+    .cell {
+        width: 10px;
+        height: 10px;
+    }
+    .display {
+        width: 500px;
+        height: 300px;
+    }
+}

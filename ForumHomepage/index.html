@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCC Forum Homepage</title>
+    <link rel="stylesheet" href="style.css">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="forum-header">
+            <div class="header-hash">#</div>
+            <div class="header-topic">Topic</div>
+            <div class="header-replies">Replies</div>
+            <div class="header-views">Views</div>
+            <div class="header-activity">Activity</div>
+        </header>
+        <div class="entries">
+        </div>
+    </div>
+
+    <script type="text/babel">
+
+        function dateHelper(difference) {
+            if(difference > 3600) {
+                return Math.floor(difference / 3600) + 'h';
+            } else {
+                return Math.floor(difference / 60) + 'm';
+            }
+        }
+
+        function stringToSlug(str) {
+                str = str.replace(/^\s+|\s+$/g, '');
+                str = str.toLowerCase();
+                var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+                var to = "aaaaeeeeiiiioooouuuunc------";
+                for (var i = 0, l = from.length; i < l; i++) {
+                    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+                }
+                str = str.replace(/[^a-z0-9 -]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-');
+                return str;
+        }
+
+
+        function Post({ post_num, posters, reply_count, title, last_posted_at, views }) {
+            const date = new Date(last_posted_at);
+            const diff = (Date.now() - date) / 1000;
+
+            return (
+                <div className="entry">
+                    <div className="post-number">
+                        {post_num}
+                    </div>
+                    <div className="post-title">
+                        <a href={`https://forum.freecodecamp.org/t/${stringToSlug(title)}`} target='_blank'>{title}</a>
+                    </div>
+                    <div className="post-users">
+                        {posters.map((poster) => (
+                            <Avatar key={poster.id} {...poster} />
+                        ))}
+                    </div>
+                    <div className="post-replies">
+                        {reply_count}
+                    </div>
+                    <div className="post-views">
+                        {views}
+                    </div>
+                    <div className="post-activity">
+                        {dateHelper(diff)}
+                    </div>
+                </div>
+            );
+        }
+
+        function Avatar({ avatar_template, username }) {
+            return (
+                <div class="avatar">
+                    <a href={`https://forum.freecodecamp.org/u/${username}`} target='_blank'>
+                        <img src={`https://forum.freecodecamp.org${avatar_template.replace('{size}', 135)}`} alt="" />
+                    </a>
+                </div>
+            );
+        }
+
+        function lookupInUsers(id, users) {
+            for(let user of users) {
+                if(user.id === id) {
+                    return user;
+                }
+            }
+            return null;
+        }
+
+        function App() {
+            const [posts, setPosts] = React.useState([]);
+
+            React.useEffect(() => {
+                fetch('https://buttercup-island.glitch.me/latest')
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);                                
+                        const threads = data.topic_list.topics.map(({ id, title, posters, reply_count, last_posted_at, views }) => 
+                            ({ id, title, posters, reply_count, last_posted_at, views }));
+                        
+                        for(let thread of threads) {
+                            thread.posters = thread.posters.map(poster => {
+                                return lookupInUsers(poster.user_id, data.users);
+                            });
+                        }
+                        setPosts(threads);
+                    });                    
+            }, []);
+
+            return (
+                <React.Fragment>
+                    {posts.map((item, i) => (
+                        <Post
+                            post_num={i + 1}
+                            key={item.id}
+                            {...item}
+                        />
+                    ))}
+                </React.Fragment>
+            );
+        }
+
+        ReactDOM.render(<App />, document.querySelector('.entries'));
+    </script>
+</body>
+</html>

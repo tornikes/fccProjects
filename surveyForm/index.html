@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="styles.css" type="text/css" />
+	<title>Document</title>
+</head>
+<body>
+	<h1 id="title"">Survey Form</h1>
+	<div id="form-outer">
+		<form id="survey-form">
+			<p id="description">Let us know how we can improve freeCodeCamp</p>
+			<div class="rowTab">
+				<div class="labelTabs">
+					<label for="name" id="name-label">* Name:</label>
+				</div>
+				<div class="rightTab">
+					<input type="text" name="name" id="name" autofocus required placeholder="Enter your name" class="input-field">
+				</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="email" id="email-label">* Email:</label>
+					</div>
+					<div class="rightTab">
+						<input type="email" name="email" id="email" autofocus required placeholder="Enter your Email" class="input-field">
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="age" id="number-label">* Age:</label>
+					</div>
+					<div class="rightTab">
+						<input type="number" name="age" id="number" autofocus required placeholder="Age" class="input-field" min="1"
+						max="125">
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="currentPos" id="pos-label">* Which option best describes your current role?</label>
+					</div>
+					<div class="rightTab">
+						<select id="dropdown" class="dropdown" name="currentPos">
+							<option value="student">Student</option>
+							<option value="job">Full Time Job</option>
+							<option value="learner">Full Time Learner</option>
+							<option value="preferNo">Prefer Not to Say</option>
+							<option value="other">Other</option>
+						</select>
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="userrating" id="userrating-label">* How likely is that you would recommend freeCodeCamp to a friend?</label>
+					</div>
+					<div class="rightTab">
+						<ul>
+							<li>
+							<label>
+								Definitely
+								<input type="radio" name="userratings" value="1" class="userratings">
+							</label>
+							</li>
+							<li>
+							<label>
+									Maybe
+									<input type="radio" name="userratings" value="2" class="userratings">
+							</label>
+							</li>
+							<li>
+							<label>
+									Not Sure
+									<input type="radio" name="userratings" value="3" class="userratings">
+							</label>
+							</li>
+						</ul>						
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="most-like">* What do you like most in FCC:</label>
+					</div>
+					<div class="rightTab">
+						<select id="most-like" class="dropdown" name="most-like">
+							<option value="challenges">Challenges</option>
+							<option value="projects">Projects</option>
+							<option value="community">Community</option>
+							<option value="openSource">Open Source</option>
+						</select>
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="prefernces">Things that should be improved in the future
+								(Check all that apply):</label>
+					</div>
+					<div class="rightTab">
+						<ul id="preferences">
+							<li class="checkbox">
+								<label>
+									<input type="checkbox" name="prefer" class="userrating" value="1">
+									Front-End Projects
+								</label>
+							</li>
+							<li class="checkbox">
+									<label>
+										<input type="checkbox" name="prefer" class="userrating" value="2">
+										Back-End Projects
+									</label>
+							</li>
+							<li class="checkbox">
+									<label>
+										<input type="checkbox" name="prefer" class="userrating" value="3">
+										Data Visualisation
+									</label>
+							</li>
+						</ul>
+					</div>
+			</div>
+			<div class="rowTab">
+					<div class="labelTabs">
+						<label for="comments">Any Comments or Suggestions?</label>
+					</div>
+					<div class="rightTab">
+						<textarea name="comment" id="comments" class="input-field" style="height:50px;resize:vertical" placeholder="Enter your comments here..."></textarea>
+					</div>
+			</div>
+			<input type="submit" id="submit">
+		</form>
+	</div>
+	<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+</html>

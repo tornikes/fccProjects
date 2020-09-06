@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    transition: all 0.4s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.bckgrnd {
+    width: 100vw;
+    height: 100vh;
+    background-color: pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#quote-box {
+    background-color: #FFF;
+    width: 600px;
+    padding: 2.5rem;
+    border-radius: 5px;
+}
+
+#text {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+    color: pink;
+}
+
+#author {
+    margin-bottom: 1.25rem;
+    text-align: right;
+    font-size: 1.2rem;
+    color: pink;
+}
+#author::before {
+    display:inline;
+    content: " - ";
+}
+
+#buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+#socials a {
+    color: #FFF;
+    background-color: pink;
+    display: inline-block;
+    width: 2.5rem;
+    padding: 0.7rem 0;
+    text-align: center;
+    border-radius: 3px;
+}
+
+#socials a:hover {
+    filter: brightness(105%)
+}
+
+#tweet-quote {
+    margin-right: 0.4rem;
+}
+
+#new-quote {
+    background-color: pink;
+    border: none;
+    color: #FFF;
+    padding: 0 0.6rem;
+    border-radius: 3px;
+}
+
+#new-quote:hover {
+    filter: brightness(105%);
+}

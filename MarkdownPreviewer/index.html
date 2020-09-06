@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Previewer</title>
+    <link rel="stylesheet" href="style.css">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/1.1.0/marked.js"></script>
+</head>
+
+<body>
+    <div id="root">    
+    </div>
+    <script type="text/babel">
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            tic: false,
+            gfm: true,
+            breaks: true,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            xhtml: false
+        });
+
+        function markupWrapper(markup) {
+            return { __html: markup };
+        }
+
+        function App() {
+            const [markdown, setMarkdown] = React.useState('# This is a heading \n## This is a subheading \n[This is a link](https://www.freecodecamp.org/)\nInline Code `var x = 7;`\nMultiline Code Block\n```\nvar x = 20;\n```\n- First Item in List\n- Second Item\n\n**Bolded text example**\n> Block quote\n\n ![React Logo w/ Text](https://goo.gl/Umyytc)');
+            const [maximized, setMaximized] = React.useState('none');
+
+            function toggleMaximized(item) {
+                if(item === maximized) {
+                    setMaximized('none');
+                } else {
+                    setMaximized(item);
+                }
+            }
+
+            return (
+                <React.Fragment>
+                    <div className={`window ${maximized === 'editor' ? "maximized" : maximized === 'previewer' ? 'hidden' : 'editor'}`}>
+                        <header>
+                            <span><i className="fa fa-free-code-camp"></i> Editor</span>
+                            <button onClick={() => toggleMaximized('editor')}><i class={maximized === 'none' ? 'fa fa-arrows-alt' : 'fa fa-compress'}></i></button>
+                        </header>
+                        <textarea name="markdown-input" value={markdown} onChange={e => setMarkdown(e.target.value)} id="editor"></textarea>
+                    </div>
+                    <div className={`window ${maximized === 'previewer' ? "maximized mex-prev" : maximized === 'editor' ? 'hidden' : 'preview'}`}>
+                        <header>
+                            <span><i className="fa fa-free-code-camp"></i> Preview</span>
+                            <button onClick={() => toggleMaximized('previewer')}><i class={maximized === 'none' ? 'fa fa-arrows-alt' : 'fa fa-compress'}></i></button>
+                        </header>
+                        <div id="preview" dangerouslySetInnerHTML={markupWrapper(marked(markdown))} />
+                    </div>
+                </React.Fragment>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+
+</html>
